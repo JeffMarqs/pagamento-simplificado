@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import br.com.dev.pagamento.simplificado.application.exception.InsufficientFundsException;
 import br.com.dev.pagamento.simplificado.application.exception.MerchantTransferPermissionDeniedException;
 import br.com.dev.pagamento.simplificado.application.exception.TransactionAuthorizationFailedException;
+import br.com.dev.pagamento.simplificado.application.exception.UserNotFoundException;
 import br.com.dev.pagamento.simplificado.domain.dto.ErrorDTO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -57,6 +58,23 @@ public class ExceptionHandlerController {
 		var menssage = ex.getMessage();
 		
 		log.warn("Transaction error: {}", menssage);
+		
+		var errorDTO = ErrorDTO.builder().code(code)
+				.message(menssage)
+				.status(status)
+				.error(error).build();
+		
+		return ResponseEntity.status(status).body(errorDTO);
+	}
+	
+	@ExceptionHandler(UserNotFoundException.class)
+	public ResponseEntity<ErrorDTO> handlerUserNotFoundException(UserNotFoundException ex) {
+		var error = "User Not Found";
+		var code = HttpStatus.NOT_FOUND.toString();
+		var status = HttpStatus.NOT_FOUND.value();
+		var menssage = ex.getMessage();
+		
+		log.warn("User Not Found: {}", menssage);
 		
 		var errorDTO = ErrorDTO.builder().code(code)
 				.message(menssage)

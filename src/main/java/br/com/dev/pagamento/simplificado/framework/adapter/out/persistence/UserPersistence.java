@@ -3,6 +3,7 @@ package br.com.dev.pagamento.simplificado.framework.adapter.out.persistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.dev.pagamento.simplificado.application.exception.UserNotFoundException;
 import br.com.dev.pagamento.simplificado.application.port.out.UserRepositoryPortOut;
 import br.com.dev.pagamento.simplificado.domain.dto.User;
 import br.com.dev.pagamento.simplificado.framework.adapter.out.repository.UserRepository;
@@ -21,7 +22,7 @@ public class UserPersistence implements UserRepositoryPortOut {
 			return obj.get();
 		
 		else
-			throw new RuntimeException();
+			throw new UserNotFoundException(payer);
 	}
 
 	@Override
